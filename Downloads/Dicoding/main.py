@@ -3,7 +3,10 @@ import pickle
 import numpy as np
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-import google.generativeai as genai
+try:
+    import google.generativeai as genai
+except Exception:
+    genai = None
 import os
 from dotenv import load_dotenv 
 
@@ -11,8 +14,11 @@ load_dotenv()
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 if not GEMINI_API_KEY:
     print("⚠️ Warning: GEMINI_API_KEY tidak ditemukan di file .env!")
-genai.configure(api_key=GEMINI_API_KEY)
-gemini_model = genai.GenerativeModel('gemini-1.5-flash')
+if genai and GEMINI_API_KEY:
+    genai.configure(api_key=GEMINI_API_KEY)
+    gemini_model = genai.GenerativeModel('gemini-1.5-flash')
+else:
+    gemini_model = None
 
 # --- 2. DEFINISI CUSTOM LAYER (Tetap Sama) ---
 @tf.keras.utils.register_keras_serializable()
@@ -72,9 +78,9 @@ try:
     )
     with open('scaler_v2.pkl', 'rb') as f:
         scaler = pickle.load(f)
-    print("✅ Model, Scaler, & Gemini Ready!")
+    print(" Model, Scaler, & Gemini Ready!")
 except Exception as e:
-    print(f"❌ Error: {e}")
+    print(f"Error: {e}")
 
 class UserInput(BaseModel):
     income: float
@@ -95,6 +101,8 @@ async def get_gemini_advice(saving_ratio, category):
     Berikan 2 kalimat saran singkat dan ramah dalam Bahasa Indonesia.
     """
     try:
+        if not gemini_model:
+            return "Tetap semangat menabung dan atur pengeluaranmu dengan bijak!"
         response = gemini_model.generate_content(prompt)
         return response.text.strip()
     except:
