@@ -74,7 +74,7 @@ model, scaler = None, None
 print("STARTING MODEL LOAD")
 
 try:
-    model_path = 'best_robo_advisor_v2.keras'
+    model_path = 'model.h5'
     
     # Keras 3 membutuhkan ini agar bisa membaca model format baru
     model = tf.keras.models.load_model(

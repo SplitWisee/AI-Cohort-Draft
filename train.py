@@ -438,6 +438,8 @@ history = model.fit(
     callbacks=callbacks,
     verbose=0
 )
+model.save("model.h5")
+print("✅ Model berhasil disimpan sebagai model.h5")
 
 # Training curves
 fig, axes = plt.subplots(1, 3, figsize=(16, 4))
