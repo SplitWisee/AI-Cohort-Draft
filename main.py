@@ -12,10 +12,8 @@ from dotenv import load_dotenv
 import traceback
 
 load_dotenv()
-raise Exception("TEST ERROR")
-print("MAIN.PY LOADED")
 
-# --- 1. DEFINISI CUSTOM LAYER ---
+# --- 1. DEFINISI CUSTOM LAYER (Wajib di atas sebelum load_model) ---
 @tf.keras.utils.register_keras_serializable()
 class FinancialAttentionLayer(tf.keras.layers.Layer):
     def __init__(self, units=64, temperature=1.0, dropout_rate=0.2, **kwargs):
@@ -66,40 +64,37 @@ def calculate_allocation(category, saving_ratio):
     else:
         return {"reksadana": 20, "obligasi": 60, "saham": 20}
 
-# --- 3. INIT APP & LOAD ---
+# --- 3. INIT APP & LOADING ---
 app = FastAPI()
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 
 model, scaler = None, None
-print("STARTING MODEL LOAD")
+print("--- MEMULAI PROSES LOADING ---")
 
 try:
-    model_path = 'model.h5'
-    
-    # Keras 3 membutuhkan ini agar bisa membaca model format baru
-    model = tf.keras.models.load_model(
-        model_path,
-        custom_objects={
-            'FinancialAttentionLayer': FinancialAttentionLayer,
-            'HybridFinancialLoss': HybridFinancialLoss
-        },
-        compile=False
-    )
-    
-    print("Model loaded!")
+    # Pastikan file ini ada di root folder Hugging Face
+    if os.path.exists('model.h5'):
+        model = tf.keras.models.load_model(
+            'model.h5',
+            custom_objects={
+                'FinancialAttentionLayer': FinancialAttentionLayer,
+                'HybridFinancialLoss': HybridFinancialLoss
+            },
+            compile=False
+        )
+        print("✅ Model loaded!")
+    else:
+        print("⚠️ File model.h5 tidak ditemukan!")
 
-    print("Loading scaler...")
-    
-    with open('scaler_v2.pkl', 'rb') as f:
-        scaler = pickle.load(f)
-
-    print("Scaler loaded!")
-
-    print("✅ FINAL SUCCESS")
+    if os.path.exists('scaler_v2.pkl'):
+        with open('scaler_v2.pkl', 'rb') as f:
+            scaler = pickle.load(f)
+        print("✅ Scaler loaded!")
+    else:
+        print("⚠️ File scaler_v2.pkl tidak ditemukan!")
 
 except Exception as e:
-    import traceback
-    print("❌ MODEL LOAD FAILED")
+    print("❌ GAGAL LOAD MODEL/SCALER")
     traceback.print_exc()
 
 class UserInput(BaseModel):
@@ -116,16 +111,14 @@ class UserInput(BaseModel):
 
 @app.get("/")
 async def index():
+    # Pastikan file HTML ini juga di-upload
     return FileResponse('smartbudget_dashboard.html')
 
 # --- 4. PREDICT ENDPOINT ---
 @app.post("/predict")
 async def predict(data: UserInput):
-    if model is None or scaler is None:
-        raise HTTPException(status_code=503, detail="Model belum siap di server")
-    
     try:
-        # Preprocessing
+        # Preprocessing Dasar
         income_log = np.log1p(data.income)
         monthly_inc = data.income / 12
         exp_ratio = np.clip(data.total_expense / (monthly_inc + 1e-6), 0, 1)
@@ -133,50 +126,63 @@ async def predict(data: UserInput):
         debt_burden = data.loan_int_rate / 20.0
         credit_norm = (data.credit_score - 300) / 549.0
 
-        # Logika Override Rule-Based (Agar aman jika ML fail)
+        # Inisialisasi Default (Agar tidak error jika ML gagal)
+        recommendation = "Obligasi (Moderat)"
+        ratio = 0.20
+
+        # LOGIKA OVERRIDE (Rule-Based Prioritas)
         if exp_ratio < 0.2 and data.income > 50000000:
             recommendation, ratio = "Saham (Agresif)", 0.65
-        elif exp_ratio > 0.7 or data.credit_score < 500:
-            recommendation, ratio = "Reksadana (Konservatif)", 0.08
+        elif exp_ratio > 0.8 or data.credit_score < 450:
+            recommendation, ratio = "Reksadana (Konservatif)", 0.05
         else:
-            # PANGGIL MODEL ML
-            feats = np.array([[income_log, exp_ratio, lifestyle_burden, debt_burden, credit_norm,
-                    data.risk_status, data.family_size, data.education, data.age, data.budget_encoded]])
-            feats_s = scaler.transform(feats)
-            preds = model.predict(feats_s, verbose=0)
+            # JALANKAN MODEL ML JIKA TERSEDIA
+            if model is not None and scaler is not None:
+                try:
+                    feats = np.array([[income_log, exp_ratio, lifestyle_burden, debt_burden, credit_norm,
+                            data.risk_status, data.family_size, data.education, data.age, data.budget_encoded]])
+                    feats_s = scaler.transform(feats)
+                    preds = model.predict(feats_s, verbose=0)
 
-            # Handle berbagai jenis output Keras (Dict vs List)
-            if isinstance(preds, dict):
-                ratio = float(preds['ratio_output'][0][0])
-                cat_idx = int(np.argmax(preds['cat_output'][0]))
-            else:
-                ratio = float(preds[0][0][0])
-                cat_idx = int(np.argmax(preds[1][0]))
+                    if isinstance(preds, dict):
+                        ratio = float(preds['ratio_output'][0][0])
+                        cat_idx = int(np.argmax(preds['cat_output'][0]))
+                    else:
+                        ratio = float(preds[0][0][0])
+                        cat_idx = int(np.argmax(preds[1][0]))
 
-            labels = {0: "Reksadana (Konservatif)", 1: "Obligasi (Moderat)", 2: "Saham (Agresif)"}
-            recommendation = labels.get(cat_idx, "Obligasi (Moderat)")
+                    labels = {0: "Reksadana (Konservatif)", 1: "Obligasi (Moderat)", 2: "Saham (Agresif)"}
+                    recommendation = labels.get(cat_idx, "Obligasi (Moderat)")
+                except Exception as e_ml:
+                    print(f"⚠️ ML Prediction Fail, using fallback: {e_ml}")
 
-        # PANGGIL GEMINI (Try-Except agar tidak bikin 500)
-        advice = "Analisis selesai. Tetaplah menabung dengan rutin untuk masa depan."
+        # PANGGIL GEMINI AI
+        advice = "Analisis selesai. Fokuslah pada pengelolaan pengeluaran dan investasi rutin."
         api_key = os.getenv("GEMINI_API_KEY")
         if api_key:
             try:
                 genai.configure(api_key=api_key)
                 gem_model = genai.GenerativeModel('gemini-1.5-flash')
-                resp = gem_model.generate_content(f"Berikan saran finansial sangat singkat (1-2 kalimat) untuk saving ratio {ratio:.1%} dan profil {recommendation}")
+                prompt = f"Berikan saran finansial sangat singkat (maks 2 kalimat) untuk saving ratio {ratio:.1%} dan profil {recommendation}"
+                resp = gem_model.generate_content(prompt)
                 if resp and resp.text:
                     advice = resp.text.strip()
             except Exception as e_gem:
                 print(f"⚠️ Gemini Fail: {e_gem}")
 
         return {
-            "predicted_saving_ratio": round(ratio, 4),
-            "recommendation": recommendation,
+            "predicted_saving_ratio": float(round(ratio, 4)),
+            "recommendation": str(recommendation),
             "asset_allocation": calculate_allocation(recommendation, ratio),
-            "ai_advice": advice
+            "ai_advice": str(advice)
         }
 
     except Exception as e_final:
-        print(f"🔥 CRASH DETAIL: {e_final}")
-        # Kirim error ke Frontend agar kita tau salahnya apa
-        raise HTTPException(status_code=500, detail=f"Backend Error: {str(e_final)}")
+        print(f"🔥 CRASH TOTAL: {e_final}")
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail="Terjadi kesalahan pada sistem analisis.")
+
+if __name__ == "__main__":
+    import uvicorn
+    # Hugging Face butuh port 7860
+    uvicorn.run(app, host="0.0.0.0", port=7860)
