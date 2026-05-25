@@ -9,6 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import google.generativeai as genai
 from dotenv import load_dotenv
+import traceback
 
 load_dotenv()
 
@@ -68,6 +69,7 @@ app = FastAPI()
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 
 model, scaler = None, None
+print("STARTING MODEL LOAD")
 
 try:
     model_path = 'best_robo_advisor_v2.keras'
@@ -82,13 +84,21 @@ try:
         compile=False
     )
     
+    print("Model loaded!")
+
+    print("Loading scaler...")
+    
     with open('scaler_v2.pkl', 'rb') as f:
         scaler = pickle.load(f)
-        
-    print("✅ FINAL SUCCESS: Model & Scaler Ready with Keras 3!")
+
+    print("Scaler loaded!")
+
+    print("✅ FINAL SUCCESS")
+
 except Exception as e:
     import traceback
-traceback.print_exc()
+    print("❌ MODEL LOAD FAILED")
+    traceback.print_exc()
 
 class UserInput(BaseModel):
     income: float
