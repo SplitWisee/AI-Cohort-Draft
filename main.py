@@ -2,7 +2,7 @@ import os
 import pickle
 import numpy as np
 import tensorflow as tf
-import keras
+from tensorflow import keras
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -73,7 +73,7 @@ try:
     model_path = 'best_robo_advisor_v2.keras'
     
     # Keras 3 membutuhkan ini agar bisa membaca model format baru
-    model = keras.models.load_model(
+    model = tf.keras.models.load_model(
         model_path,
         custom_objects={
             'FinancialAttentionLayer': FinancialAttentionLayer,
@@ -87,7 +87,8 @@ try:
         
     print("✅ FINAL SUCCESS: Model & Scaler Ready with Keras 3!")
 except Exception as e:
-    print(f"❌ LOAD ERROR DETAIL: {str(e)}")
+    import traceback
+traceback.print_exc()
 
 class UserInput(BaseModel):
     income: float
