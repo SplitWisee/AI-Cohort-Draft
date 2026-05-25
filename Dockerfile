@@ -9,7 +9,7 @@ RUN apt-get update && apt-get install -y \
     g++ \
     libgomp1 \
     && rm -rf /var/lib/apt/lists/*
-    
+
 # Copy requirements dan install
 COPY ./requirements.txt /code/requirements.txt
 RUN pip install --no-cache-dir --upgrade pip
@@ -20,3 +20,5 @@ COPY . .
 
 # Jalankan aplikasi
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "7860"]
+
+# rebuild trigger

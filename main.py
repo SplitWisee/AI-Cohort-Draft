@@ -12,6 +12,8 @@ from dotenv import load_dotenv
 import traceback
 
 load_dotenv()
+raise Exception("TEST ERROR")
+print("MAIN.PY LOADED")
 
 # --- 1. DEFINISI CUSTOM LAYER ---
 @tf.keras.utils.register_keras_serializable()
