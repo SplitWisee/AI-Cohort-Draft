@@ -162,7 +162,7 @@ async def predict(data: UserInput):
         if api_key:
             try:
                 genai.configure(api_key=api_key)
-                gem_model = genai.GenerativeModel('gemini-1.5-flash')
+                gem_model = genai.GenerativeModel('gemini-pro')
                 prompt = f"Berikan saran finansial sangat singkat (maks 2 kalimat) untuk saving ratio {ratio:.1%} dan profil {recommendation}"
                 resp = gem_model.generate_content(prompt)
                 if resp and resp.text:
