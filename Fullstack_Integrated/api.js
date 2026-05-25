@@ -1,7 +1,7 @@
 // File ini adalah contoh cara memanggil API AI dari Frontend (Fullstack)
-// Lokasi API: https://felicia2305-robo-advisor-api.hf.space/docs
+// Lokasi API: https://splitwisee-robo-advisor-api.hf.space/docs
 
-const response = await fetch("https://felicia2305-robo-advisor-api.hf.space/predict", {
+const response = await fetch("https://splitwisee-robo-advisor-api.hf.space/predict", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
