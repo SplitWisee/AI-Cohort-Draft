@@ -71,7 +71,7 @@
         }
 
         .gauge-circle {
-            transition: stroke-dashoffset 1s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: stroke-dasharray 1s cubic-bezier(0.4, 0, 0.2, 1);
             transform: rotate(-90deg);
             transform-origin: 50% 50%;
         }
@@ -90,7 +90,7 @@
                 </div>
                 <div>
                     <h1 class="text-xl font-bold text-slate-900 tracking-tight">SmartBudgeting AI</h1>
-                    <p class="text-xs text-cyan-600 font-medium">Robo-Advisor Dashboard v3</p>
+                    <p class="text-xs text-cyan-600 font-medium">Smart Budgeting Dashboard v3</p>
                 </div>
             </div>
             <div
@@ -244,14 +244,14 @@
                     <div class="text-xs text-slate-400 mt-1" id="savingLabel">-</div>
                 </div>
                 <div class="glass-card rounded-2xl p-4 text-center">
-                    <div class="text-xs text-slate-500 font-medium mb-1">Profil Risiko</div>
-                    <div class="text-lg font-bold text-cyan-700" id="profilDisplay">-</div>
-                    <div class="text-xs text-slate-400 mt-1" id="budgetClassDisplay">-</div>
+                    <div class="text-xs text-slate-500 font-medium mb-1">Kelas Dominan</div>
+                    <div class="text-lg font-bold text-cyan-700" id="dominantDisplay">-</div>
+                    <div class="text-xs text-slate-400 mt-1" id="dominantSub">-</div>
                 </div>
                 <div class="glass-card rounded-2xl p-4 text-center">
-                    <div class="text-xs text-slate-500 font-medium mb-1">Prediksi Model</div>
-                    <div class="text-lg font-bold text-cyan-700" id="predictedClassDisplay">-</div>
-                    <div class="text-xs text-slate-400 mt-1">Dominant Asset</div>
+                    <div class="text-xs text-slate-500 font-medium mb-1">Status Budget</div>
+                    <div class="text-lg font-bold text-cyan-700" id="statusDisplay">-</div>
+                    <div class="text-xs text-slate-400 mt-1">Rule-based</div>
                 </div>
             </div>
 
@@ -265,10 +265,10 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path>
                         </svg>
-                        Alokasi Aset Rekomendasi
+                        Alokasi Smart Budgeting
                     </h2>
-                    <span class="text-xs bg-cyan-100 text-cyan-800 px-2 py-1 rounded-md font-medium">End-to-End
-                        ML</span>
+                    <span class="text-xs bg-cyan-100 text-cyan-800 px-2 py-1 rounded-md font-medium">Adaptive
+                        Rule</span>
                 </div>
 
                 <div class="flex items-center gap-8">
@@ -276,13 +276,13 @@
                     <div class="relative w-40 h-40 flex-shrink-0">
                         <svg class="w-full h-full" viewBox="0 0 100 100">
                             <circle cx="50" cy="50" r="40" fill="none" stroke="#ecfeff" stroke-width="12" />
-                            <circle id="circleReksa" cx="50" cy="50" r="40" fill="none" stroke="#06b6d4"
+                            <circle id="circleNeeds" cx="50" cy="50" r="40" fill="none" stroke="#0891b2"
                                 stroke-width="12" stroke-dasharray="251.2" stroke-dashoffset="251.2"
                                 stroke-linecap="round" class="gauge-circle" />
-                            <circle id="circleObligasi" cx="50" cy="50" r="40" fill="none" stroke="#22d3ee"
+                            <circle id="circleWants" cx="50" cy="50" r="40" fill="none" stroke="#22d3ee"
                                 stroke-width="12" stroke-dasharray="251.2" stroke-dashoffset="251.2"
                                 stroke-linecap="round" class="gauge-circle" />
-                            <circle id="circleSaham" cx="50" cy="50" r="40" fill="none" stroke="#0891b2"
+                            <circle id="circleSavings" cx="50" cy="50" r="40" fill="none" stroke="#67e8f9"
                                 stroke-width="12" stroke-dasharray="251.2" stroke-dashoffset="251.2"
                                 stroke-linecap="round" class="gauge-circle" />
                         </svg>
@@ -297,40 +297,52 @@
                         <div>
                             <div class="flex justify-between text-sm mb-1">
                                 <span class="font-medium text-slate-700 flex items-center gap-2">
-                                    <span class="w-3 h-3 rounded-full bg-cyan-500"></span> Reksadana
+                                    <span class="w-3 h-3 rounded-full bg-cyan-700"></span> Kebutuhan
                                 </span>
-                                <span class="font-bold text-cyan-700" id="pctReksa">0%</span>
+                                <span class="font-bold text-cyan-700" id="pctNeeds">0%</span>
                             </div>
                             <div class="h-3 bg-slate-100 rounded-full overflow-hidden">
-                                <div id="barReksa"
-                                    class="bar-fill h-full bg-gradient-to-r from-cyan-400 to-cyan-500 rounded-full"
+                                <div id="barNeeds"
+                                    class="bar-fill h-full bg-gradient-to-r from-cyan-600 to-cyan-700 rounded-full"
                                     style="width: 0%"></div>
+                            </div>
+                            <div class="flex justify-between text-xs text-slate-400 mt-0.5">
+                                <span>Target: 40-50%</span>
+                                <span id="statusNeeds">-</span>
                             </div>
                         </div>
                         <div>
                             <div class="flex justify-between text-sm mb-1">
                                 <span class="font-medium text-slate-700 flex items-center gap-2">
-                                    <span class="w-3 h-3 rounded-full bg-cyan-400"></span> Obligasi
+                                    <span class="w-3 h-3 rounded-full bg-cyan-400"></span> Keinginan
                                 </span>
-                                <span class="font-bold text-cyan-700" id="pctObligasi">0%</span>
+                                <span class="font-bold text-cyan-700" id="pctWants">0%</span>
                             </div>
                             <div class="h-3 bg-slate-100 rounded-full overflow-hidden">
-                                <div id="barObligasi"
+                                <div id="barWants"
                                     class="bar-fill h-full bg-gradient-to-r from-cyan-300 to-cyan-400 rounded-full"
                                     style="width: 0%"></div>
                             </div>
+                            <div class="flex justify-between text-xs text-slate-400 mt-0.5">
+                                <span>Sisa alokasi</span>
+                                <span id="statusWants">-</span>
+                            </div>
                         </div>
                         <div>
                             <div class="flex justify-between text-sm mb-1">
                                 <span class="font-medium text-slate-700 flex items-center gap-2">
-                                    <span class="w-3 h-3 rounded-full bg-cyan-700"></span> Saham
+                                    <span class="w-3 h-3 rounded-full bg-cyan-300"></span> Tabungan
                                 </span>
-                                <span class="font-bold text-cyan-700" id="pctSaham">0%</span>
+                                <span class="font-bold text-cyan-700" id="pctSavings">0%</span>
                             </div>
                             <div class="h-3 bg-slate-100 rounded-full overflow-hidden">
-                                <div id="barSaham"
-                                    class="bar-fill h-full bg-gradient-to-r from-cyan-600 to-cyan-700 rounded-full"
+                                <div id="barSavings"
+                                    class="bar-fill h-full bg-gradient-to-r from-cyan-200 to-cyan-300 rounded-full"
                                     style="width: 0%"></div>
+                            </div>
+                            <div class="flex justify-between text-xs text-slate-400 mt-0.5">
+                                <span>Minimal 19%</span>
+                                <span id="statusSavings">-</span>
                             </div>
                         </div>
                     </div>
@@ -338,37 +350,47 @@
 
                 <div class="mt-6 p-4 bg-cyan-50/50 rounded-xl border border-cyan-100">
                     <p class="text-sm text-slate-600 leading-relaxed" id="recommendationText">
-                        Masukkan data keuangan Anda dan klik "Analisis" untuk melihat rekomendasi alokasi aset dari
-                        model SmartBudgeting AI.
+                        Masukkan data keuangan Anda dan klik "Analisis" untuk melihat rekomendasi alokasi smart
+                        budgeting: kebutuhan 40-50%, tabungan minimal 19%, dan keinginan menyesuaikan.
                     </p>
                 </div>
             </div>
 
-            <!-- Confidence & Details -->
+            <!-- Detail Perhitungan Smart Budgeting (pengganti Detail Prediksi Model) -->
             <div class="glass-card rounded-2xl p-6">
-                <h3 class="font-semibold text-slate-800 mb-4">Detail Prediksi Model</h3>
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="p-4 bg-white rounded-xl border border-slate-100">
-                        <div class="text-xs text-slate-500 mb-2">Confidence Profil</div>
-                        <div class="space-y-2" id="confidenceDetails">
-                            <div class="flex justify-between text-sm"><span
-                                    class="text-slate-600">Konservatif</span><span class="font-mono">-</span></div>
-                            <div class="flex justify-between text-sm"><span class="text-slate-600">Moderat</span><span
-                                    class="font-mono">-</span></div>
-                            <div class="flex justify-between text-sm"><span class="text-slate-600">Agresif</span><span
-                                    class="font-mono">-</span></div>
-                        </div>
+                <h3 class="font-semibold text-slate-800 mb-4 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-cyan-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z">
+                        </path>
+                    </svg>
+                    Detail Perhitungan Smart Budgeting
+                </h3>
+                <div class="grid grid-cols-3 gap-4">
+                    <div class="p-4 bg-white rounded-xl border border-slate-100 text-center">
+                        <div class="text-xs text-slate-500 mb-1">Pengeluaran Pokok</div>
+                        <div class="text-xl font-bold text-cyan-700" id="needsActualDisplay">-</div>
+                        <div class="text-xs text-slate-400 mt-1">dari total expense</div>
                     </div>
-                    <div class="p-4 bg-white rounded-xl border border-slate-100">
-                        <div class="text-xs text-slate-500 mb-2">Raw Allocation Probs</div>
-                        <div class="space-y-2" id="probDetails">
-                            <div class="flex justify-between text-sm"><span class="text-slate-600">Reksadana</span><span
-                                    class="font-mono">-</span></div>
-                            <div class="flex justify-between text-sm"><span class="text-slate-600">Obligasi</span><span
-                                    class="font-mono">-</span></div>
-                            <div class="flex justify-between text-sm"><span class="text-slate-600">Saham</span><span
-                                    class="font-mono">-</span></div>
-                        </div>
+                    <div class="p-4 bg-white rounded-xl border border-slate-100 text-center">
+                        <div class="text-xs text-slate-500 mb-1">Gaya Hidup</div>
+                        <div class="text-xl font-bold text-cyan-700" id="wantsActualDisplay">-</div>
+                        <div class="text-xs text-slate-400 mt-1">lifestyle burden</div>
+                    </div>
+                    <div class="p-4 bg-white rounded-xl border border-slate-100 text-center">
+                        <div class="text-xs text-slate-500 mb-1">Aturan Diterapkan</div>
+                        <div class="text-sm font-bold text-cyan-700 leading-tight mt-1" id="ruleAppliedDisplay">-</div>
+                        <div class="text-xs text-slate-400 mt-1">dominan</div>
+                    </div>
+                </div>
+                <div class="mt-4 grid grid-cols-2 gap-4">
+                    <div class="p-3 bg-cyan-50/50 rounded-lg border border-cyan-100">
+                        <div class="text-xs text-slate-500">Expense Ratio</div>
+                        <div class="text-sm font-mono font-medium text-cyan-800" id="detailExpenseRatio">-</div>
+                    </div>
+                    <div class="p-3 bg-cyan-50/50 rounded-lg border border-cyan-100">
+                        <div class="text-xs text-slate-500">Raw Allocation (pre-process)</div>
+                        <div class="text-sm font-mono font-medium text-cyan-800" id="detailRawAlloc">-</div>
                     </div>
                 </div>
             </div>
@@ -377,280 +399,273 @@
     </main>
 
     <footer class="max-w-6xl mx-auto px-4 py-6 text-center text-xs text-slate-400">
-        SmartBudgeting AI Dashboard · TensorFlow End-to-End · White & Cyan Theme
+        SmartBudgeting AI Dashboard · Smart Budgeting Adaptive Rule · White & Cyan Theme
     </footer>
 
     <script>
-        // Replicate Python logic exactly
-        const PROFIL_MAP = {
-            0: 'Konservatif (Reksadana)',
-            1: 'Moderat (Obligasi)',
-            2: 'Agresif (Saham)'
-        };
+        const CLASS_NAMES = ['Kebutuhan', 'Keinginan', 'Tabungan'];
 
+        // 1. Fungsi Label Saving Ratio
         function interpretSavingRatio(ratio) {
             if (ratio >= 0.70) return 'Sangat Kuat (>70%)';
             if (ratio >= 0.50) return 'Kuat (50–70%)';
             if (ratio >= 0.35) return 'Cukup Baik (35–50%)';
-            if (ratio >= 0.15) return 'Moderat (15–35%)';
-            if (ratio >= 0.10) return 'Lemah (10–15%)';
+            if (ratio >= 0.19) return 'Moderat (19–35%)';
+            if (ratio >= 0.10) return 'Lemah (10–19%)';
             return 'Sangat Lemah (<10%)';
         }
 
-        function allocationTarget(savingRatio, budgetClass) {
-            const sr = Math.max(0, Math.min(1, savingRatio));
-            if (budgetClass === 0) {
-                return [70, 25, 5];
-            } else if (budgetClass === 1) {
-                const saham = Math.min(35, Math.max(20, Math.round(20 + sr * 20)));
-                const reksadana = Math.min(25, Math.max(10, Math.round(15 - sr * 10)));
-                const obligasi = 100 - saham - reksadana;
-                return [reksadana, obligasi, saham];
-            } else {
-                const saham = Math.min(75, Math.max(40, Math.round(40 + sr * 40)));
-                const reksadana = Math.min(15, Math.max(5, Math.round(15 - sr * 10)));
-                const obligasi = 100 - saham - reksadana;
-                return [reksadana, obligasi, saham];
-            }
-        }
+        // 2. Fungsi Logika Smart Budgeting (Lokal)
+        function generateRealisticTarget(income, total_expense, lifestyle_expense) {
+            const monthly_inc = income / 12.0;
+            const needs_actual = Math.min(0.7, Math.max(0.1, (total_expense - lifestyle_expense) / monthly_inc));
+            const wants_actual = Math.min(1, lifestyle_expense / (monthly_inc + 1e-6));
+            const expense_ratio = Math.min(1, total_expense / (monthly_inc + 1e-6));
+            const saving_ratio = 1 - expense_ratio;
 
-        // Simulate model prediction (rule-based approximation of the trained model)
-        function predictModel(userData) {
-            const income = userData.income || 1;
-            const monthlyInc = income / 12.0;
-            const totalExp = userData.total_expense || 0;
-            const lifestyle = userData.lifestyle_expense || 0;
-            const loanRate = userData.loan_int_rate || 10.0;
-            const credit = userData.credit_score || 579;
-            const family = userData.family_size || 2;
-            const age = userData.age || 30;
+            let needs_target, wants_target, savings_target;
 
-            // Feature engineering
-            const expenseRatio = Math.min(1, totalExp / (monthlyInc + 1e-6));
-            const savingActual = 1 - expenseRatio;
-
-            const features = {
-                income_log: Math.log1p(income),
-                expense_ratio: expenseRatio,
-                lifestyle_burden: Math.min(1, lifestyle / (monthlyInc + 1e-6)),
-                debt_burden: loanRate / 20.0,
-                credit_norm: (credit - 300) / 549.0,
-                family_size: family,
-                age: age
-            };
-
-            // Determine budget class based on saving ratio + other factors (approximating model)
-            let budgetClass;
-            // Core logic: saving ratio drives class, adjusted by credit and lifestyle
-            if (savingActual >= 0.50 && credit >= 700) {
-                budgetClass = 2; // Agresif
-            } else if (savingActual >= 0.35 && credit >= 600) {
-                budgetClass = 1; // Moderat
-            } else if (savingActual >= 0.20 && lifestyle / (monthlyInc + 1e-6) < 0.4) {
-                budgetClass = 1; // Moderat
-            } else {
-                budgetClass = 0; // Konservatif
+            if (expense_ratio > 0.5) {
+                needs_target = 0.45; wants_target = 0.25; savings_target = 0.30;
             }
 
-            // Override: very low saving always conservative
-            if (savingActual < 0.15) budgetClass = 0;
-            // Override: very high saving + good credit = aggressive
-            if (savingActual > 0.65 && credit > 650) budgetClass = 2;
-
-            const alloc = allocationTarget(savingActual, budgetClass);
-            const allocPct = {
-                'Reksadana': alloc[0],
-                'Obligasi': alloc[1],
-                'Saham': alloc[2]
-            };
-
-            // Simulate confidence scores (softmax-like)
-            const confRaw = [0.1, 0.1, 0.1];
-            confRaw[budgetClass] = 0.7 + Math.random() * 0.25;
-            const confSum = confRaw.reduce((a, b) => a + b, 0);
-            const conf = confRaw.map(c => c / confSum);
-
-            // Simulate allocation probs (softmax-like from model output)
-            const probRaw = alloc.map(v => v / 100 + (Math.random() - 0.5) * 0.05);
-            const probSum = probRaw.reduce((a, b) => a + b, 0);
-            const probs = probRaw.map(p => Math.max(0.01, p / probSum));
-            const probSum2 = probs.reduce((a, b) => a + b, 0);
-            const finalProbs = probs.map(p => p / probSum2);
-
-            return {
-                features,
-                saving_actual: savingActual,
-                saving_pred: savingActual + (Math.random() - 0.5) * 0.02, // model prediction close to actual
-                budget_class: budgetClass,
-                profil: PROFIL_MAP[budgetClass],
-                alloc_pct: allocPct,
-                confidence: {
-                    'Konservatif (Reksadana)': Math.round(conf[0] * 1000) / 10,
-                    'Moderat (Obligasi)': Math.round(conf[1] * 1000) / 10,
-                    'Agresif (Saham)': Math.round(conf[2] * 1000) / 10
-                },
-                alloc_probs: {
-                    'Reksadana': Math.round(finalProbs[0] * 10000) / 10000,
-                    'Obligasi': Math.round(finalProbs[1] * 10000) / 10000,
-                    'Saham': Math.round(finalProbs[2] * 10000) / 10000
-                }
-            };
+            if (saving_ratio > 0.4) {
+                savings_target = Math.min(0.6, Math.max(0.4, saving_ratio));
+                needs_target = Math.max(0.15, needs_actual);
+                wants_target = 1 - savings_target - needs_target;
+            } else if (wants_actual > 0.3) {
+                wants_target = Math.min(0.5, Math.max(0.35, wants_actual));
+                needs_target = Math.max(0.2, needs_actual);
+                savings_target = 1 - wants_target - needs_target;
+            } else {
+                needs_target = Math.min(0.5, Math.max(0.4, needs_actual));
+                wants_target = Math.max(0.1, wants_actual);
+                savings_target = 1 - needs_target - wants_target;
+            }
+            const total = (needs_target || 0.1) + (wants_target || 0.1) + (savings_target || 0.1);
+            return [needs_target / total, wants_target / total, savings_target / total];
         }
 
-        function updateUI(result) {
-            // Features
-            document.getElementById('feat_income_log').textContent = result.features.income_log.toFixed(4);
-            document.getElementById('feat_expense_ratio').textContent = result.features.expense_ratio.toFixed(4);
-            document.getElementById('feat_lifestyle').textContent = result.features.lifestyle_burden.toFixed(4);
-            document.getElementById('feat_debt').textContent = result.features.debt_burden.toFixed(4);
-            document.getElementById('feat_credit').textContent = result.features.credit_norm.toFixed(4);
-            document.getElementById('feat_family').textContent = result.features.family_size;
-            document.getElementById('feat_age').textContent = result.features.age;
+        function applyPostProcessing(allocation_pct) {
+            let [needs, wants, savings] = allocation_pct;
+            needs = Math.min(60, Math.max(15, needs));
+            savings = Math.min(70, Math.max(10, savings));
+            wants = 100 - needs - savings;
+            if (wants < 5) { wants = 5; savings = 100 - needs - wants; }
+            return [needs, wants, savings];
+        }
 
-            // Summary
-            document.getElementById('savingRatioDisplay').textContent = (result.saving_actual * 100).toFixed(1) + '%';
-            document.getElementById('savingLabel').textContent = interpretSavingRatio(result.saving_actual);
-            document.getElementById('profilDisplay').textContent = result.profil.split(' ')[0];
-            document.getElementById('budgetClassDisplay').textContent = result.profil;
+        function updateFeatureEngineering(userData) {
 
-            const dominantAsset = result.profil.match(/\((.*?)\)/)?.[1] || 'Reksadana';
-            document.getElementById('predictedClassDisplay').textContent = dominantAsset;
+            const monthly_inc = userData.income / 12;
 
-            // Allocation bars
-            const r = result.alloc_pct['Reksadana'];
-            const o = result.alloc_pct['Obligasi'];
-            const s = result.alloc_pct['Saham'];
+            const income_log = Math.log(userData.income + 1);
 
-            document.getElementById('pctReksa').textContent = r + '%';
-            document.getElementById('pctObligasi').textContent = o + '%';
-            document.getElementById('pctSaham').textContent = s + '%';
+            const expense_ratio =
+                userData.total_expense / (monthly_inc + 1e-6);
+
+            const lifestyle_burden =
+                userData.lifestyle_expense / (monthly_inc + 1e-6);
+
+            const debt_burden =
+                userData.loan_int_rate / 100;
+
+            const credit_norm =
+                userData.credit_score / 850;
+
+            document.getElementById('feat_income_log').textContent =
+                income_log.toFixed(2);
+
+            document.getElementById('feat_expense_ratio').textContent =
+                expense_ratio.toFixed(2);
+
+            document.getElementById('feat_lifestyle').textContent =
+                lifestyle_burden.toFixed(2);
+
+            document.getElementById('feat_debt').textContent =
+                debt_burden.toFixed(2);
+
+            document.getElementById('feat_credit').textContent =
+                credit_norm.toFixed(2);
+
+            document.getElementById('feat_family').textContent =
+                userData.family_size;
+
+            document.getElementById('feat_age').textContent =
+                userData.age;
+        }
+
+        // 3. Fungsi Utama: Update Tampilan Dashboard
+        function updateUI(apiResult, userData) {
+            // A. Hitung Budgeting Lokal untuk Grafik Kebutuhan/Keinginan/Tabungan
+            const n = apiResult.needs;
+            const w = apiResult.wants;
+            const s = apiResult.savings;
+            const monthly_inc = userData.income / 12;
+
+            const expenseRatio =
+                userData.total_expense / (monthly_inc + 1e-6);
+
+            const nRounded = Math.round(n);
+            const wRounded = Math.round(w);
+            const sRounded = Math.round(s);
+
+
+            // B. Update Angka Ringkasan (Data dari API)
+            document.getElementById('savingRatioDisplay').textContent = (apiResult.predicted_saving_ratio * 100).toFixed(1) + '%';
+            document.getElementById('savingLabel').textContent = interpretSavingRatio(apiResult.predicted_saving_ratio);
+            document.getElementById('dominantDisplay').textContent =
+                apiResult.dominant_class;
+            document.getElementById('statusDisplay').textContent =
+                apiResult.budget_status;
+            document.getElementById('detailExpenseRatio').textContent =
+                expenseRatio.toFixed(2);
+            document.getElementById('detailRawAlloc').textContent =
+                `${n}% | ${w}% | ${s}%`;
+            document.getElementById('dominantSub').textContent =
+                interpretSavingRatio(apiResult.predicted_saving_ratio);
+
+            // C. Update Progress Bars (Kebutuhan, Keinginan, Tabungan)
+            document.getElementById('pctNeeds').textContent = n + '%';
+            document.getElementById('pctWants').textContent = w + '%';
+            document.getElementById('pctSavings').textContent = s + '%';
+            document.getElementById('statusNeeds').textContent =
+                (n >= 40 && n <= 50)
+                    ? 'Ideal'
+                    : 'Perlu Evaluasi';
+
+            document.getElementById('statusWants').textContent =
+                (w <= 30)
+                    ? 'Terkontrol'
+                    : 'Terlalu Tinggi';
+
+            document.getElementById('statusSavings').textContent =
+                (s >= 19)
+                    ? 'Aman'
+                    : 'Kurang';
 
             setTimeout(() => {
-                document.getElementById('barReksa').style.width = r + '%';
-                document.getElementById('barObligasi').style.width = o + '%';
-                document.getElementById('barSaham').style.width = s + '%';
+                document.getElementById('barNeeds').style.width = n + '%';
+                document.getElementById('barWants').style.width = w + '%';
+                document.getElementById('barSavings').style.width = s + '%';
             }, 50);
 
-            // Donut chart (circumference = 2*PI*40 ≈ 251.2)
-            const C = 251.2;
-            const offsetR = C - (r / 100) * C;
-            const offsetO = C - (o / 100) * C;
-            const offsetS = C - (s / 100) * C;
+            // D. Update Donut Chart
+            const C = 251.2; // Keliling lingkaran
+            document.getElementById('circleNeeds').style.strokeDasharray = `${(n / 100) * C} ${C}`;
+            document.getElementById('circleWants').style.strokeDasharray = `${(w / 100) * C} ${C}`;
+            document.getElementById('circleWants').style.strokeDashoffset = `-${(n / 100) * C}`;
+            document.getElementById('circleSavings').style.strokeDasharray = `${(s / 100) * C} ${C}`;
+            document.getElementById('circleSavings').style.strokeDashoffset = `-${((n + w) / 100) * C}`;
 
-            // Stacked: Reksadana starts at 0, Obligasi at r, Saham at r+o
-            document.getElementById('circleReksa').style.strokeDasharray = `${(r / 100) * C} ${C}`;
-            document.getElementById('circleReksa').style.strokeDashoffset = '0';
+            // E. Update Saran AI (Data dari API Gemini)
+            document.getElementById('recommendationText').innerHTML = `<b>Saran AI:</b> ${apiResult.ai_advice}`;
 
-            document.getElementById('circleObligasi').style.strokeDasharray = `${(o / 100) * C} ${C}`;
-            document.getElementById('circleObligasi').style.strokeDashoffset = `-${(r / 100) * C}`;
-
-            document.getElementById('circleSaham').style.strokeDasharray = `${(s / 100) * C} ${C}`;
-            document.getElementById('circleSaham').style.strokeDashoffset = `-${((r + o) / 100) * C}`;
-
-            // Recommendation text
-            const recTexts = {
-                0: `Profil <b>Konservatif</b> dipilih karena saving ratio Anda ${(result.saving_actual * 100).toFixed(0)}% menunjukkan kondisi keuangan yang perlu dijaga. Alokasi 70% Reksadana memberikan stabilitas modal dengan likuiditas tinggi.`,
-                1: `Profil <b>Moderat</b> sesuai untuk saving ratio ${(result.saving_actual * 100).toFixed(0)}%. Kombinasi Obligasi dan Reksadana memberikan keseimbangan antara pertumbuhan dan keamanan modal.`,
-                2: `Profil <b>Agresif</b> direkomendasikan berdasarkan saving ratio kuat ${(result.saving_actual * 100).toFixed(0)}%. Alokasi Saham dominan memaksimalkan potensi pertumbuhan jangka panjang.`
-            };
-            document.getElementById('recommendationText').innerHTML = recTexts[result.budget_class];
-
-            // Confidence details
-            const confContainer = document.getElementById('confidenceDetails');
-            confContainer.innerHTML = Object.entries(result.confidence).map(([k, v]) => `
-                <div class="flex justify-between text-sm items-center">
-                    <span class="text-slate-600">${k.split(' ')[0]}</span>
-                    <div class="flex items-center gap-2">
-                        <div class="w-16 h-1.5 bg-slate-100 rounded-full overflow-hidden">
-                            <div class="h-full bg-cyan-500 rounded-full" style="width: ${v}%"></div>
-                        </div>
-                        <span class="font-mono text-cyan-700 w-12 text-right">${v.toFixed(1)}%</span>
-                    </div>
-                </div>
-            `).join('');
-
-            // Prob details
-            const probContainer = document.getElementById('probDetails');
-            const names = ['Reksadana', 'Obligasi', 'Saham'];
-            probContainer.innerHTML = names.map((name, i) => `
-                <div class="flex justify-between text-sm items-center">
-                    <span class="text-slate-600">${name}</span>
-                    <span class="font-mono text-cyan-700">${result.alloc_probs[name].toFixed(4)}</span>
-                </div>
-            `).join('');
+            // F. Update Detail Perhitungan
+            document.getElementById('needsActualDisplay').textContent = (n) + '%';
+            document.getElementById('wantsActualDisplay').textContent = (w) + '%';
+            document.getElementById('ruleAppliedDisplay').textContent = apiResult.recommendation;
         }
 
+        // 4. Fungsi Utama: Panggil Server
         async function runPrediction(e) {
             if (e) e.preventDefault();
 
-            // Ambil data dari form
+            // Ambil Data dari Form
             const userData = {
-                income: parseFloat(document.getElementById('income').value) || 0,
+                income: parseFloat(document.getElementById('income').value) || 1,
                 total_expense: parseFloat(document.getElementById('total_expense').value) || 0,
                 lifestyle_expense: parseFloat(document.getElementById('lifestyle_expense').value) || 0,
                 loan_int_rate: parseFloat(document.getElementById('loan_int_rate').value) || 0,
                 credit_score: parseFloat(document.getElementById('credit_score').value) || 0,
+
                 family_size: parseInt(document.getElementById('family_size').value) || 1,
                 age: parseInt(document.getElementById('age').value) || 25,
-                // Tambahkan default value untuk field yang tidak ada di form HTML temanmu
+
                 risk_status: 1,
-                education: 2,
+                education: 1,
                 budget_encoded: 1
             };
 
             try {
-                // PANGGIL API ASLI (Gunakan path relatif agar fleksibel)
-                const response = await fetch("/predict", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
+                // Tampilkan Loading (opsional)
+                console.log("Menghubungi Server SplitWisee...");
+                document.getElementById('recommendationText').innerHTML =
+                    '⏳ Sedang menganalisis data keuangan...';
+
+                const response = await fetch('https://splitwisee-robo-advisor-api.hf.space/predict', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(userData)
                 });
 
+                if (!response.ok) throw new Error('API Error');
                 const result = await response.json();
+                updateFeatureEngineering(userData);
 
-                // UPDATE UI dengan data dari API ASLI
-                document.getElementById('savingRatioDisplay').textContent = (result.predicted_saving_ratio * 100).toFixed(1) + '%';
-                document.getElementById('profilDisplay').textContent = result.recommendation.split(' ')[0];
-                document.getElementById('predictedClassDisplay').textContent = result.recommendation;
-
-                // Update Alokasi Aset (dari logika Python)
-                const alloc = result.asset_allocation;
-                document.getElementById('pctReksa').textContent = alloc.reksadana + '%';
-                document.getElementById('pctObligasi').textContent = alloc.obligasi + '%';
-                document.getElementById('pctSaham').textContent = alloc.saham + '%';
-
-                document.getElementById('barReksa').style.width = alloc.reksadana + '%';
-                document.getElementById('barObligasi').style.width = alloc.obligasi + '%';
-                document.getElementById('barSaham').style.width = alloc.saham + '%';
-
-                // TAMPILKAN SARAN DARI GEMINI AI
-                document.getElementById('recommendationText').innerHTML = `<b>Saran AI Advisor:</b><br>${result.ai_advice}`;
+                // Jalankan Update Tampilan
+                updateUI(result, userData);
 
             } catch (error) {
-                console.error("Error memanggil AI:", error);
-                alert("Gagal menghubungi server AI. Pastikan server sudah Running!");
+                console.error(error);
+                alert("Gagal menghubungi server AI. Pastikan Space sudah status 'Running'.");
             }
         }
 
         function loadPreset(name) {
-            const presets = {
-                budi: { income: 180000, total_expense: 4000, lifestyle_expense: 1500, loan_int_rate: 4.5, credit_score: 760, family_size: 1, age: 28 },
-                sari: { income: 120000, total_expense: 7000, lifestyle_expense: 3000, loan_int_rate: 9.0, credit_score: 650, family_size: 3, age: 35 },
-                andi: { income: 60000, total_expense: 4500, lifestyle_expense: 2500, loan_int_rate: 16.0, credit_score: 420, family_size: 4, age: 24 },
-                dinda: { income: 300000, total_expense: 22000, lifestyle_expense: 15000, loan_int_rate: 12.0, credit_score: 580, family_size: 2, age: 30 }
+            const p = {
+                budi: {
+                    inc: 180000,
+                    exp: 4000,
+                    life: 1500,
+                    loan: 4.5,
+                    cs: 760,
+                    fam: 1,
+                    age: 28
+                },
+
+                sari: {
+                    inc: 120000,
+                    exp: 7000,
+                    life: 3000,
+                    loan: 9.0,
+                    cs: 650,
+                    fam: 3,
+                    age: 35
+                },
+
+                andi: {
+                    inc: 90000,
+                    exp: 8500,
+                    life: 5000,
+                    loan: 12,
+                    cs: 580,
+                    fam: 2,
+                    age: 29
+                },
+
+                dinda: {
+                    inc: 350000,
+                    exp: 12000,
+                    life: 7000,
+                    loan: 3.5,
+                    cs: 810,
+                    fam: 1,
+                    age: 31
+                }
             };
-            const p = presets[name];
-            if (!p) return;
-            Object.keys(p).forEach(k => {
-                const el = document.getElementById(k);
-                if (el) el.value = p[k];
-            });
+            const d = p[name];
+            document.getElementById('income').value = d.inc;
+            document.getElementById('total_expense').value = d.exp;
+            document.getElementById('lifestyle_expense').value = d.life;
+            document.getElementById('loan_int_rate').value = d.loan;
+            document.getElementById('credit_score').value = d.cs;
+            document.getElementById('family_size').value = d.fam;
+            document.getElementById('age').value = d.age;
             runPrediction();
         }
 
         document.getElementById('budgetForm').addEventListener('submit', runPrediction);
-
-        // Auto-run on load with default values
         window.addEventListener('load', () => runPrediction());
     </script>
 </body>

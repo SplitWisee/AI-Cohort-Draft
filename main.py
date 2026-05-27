@@ -1,3 +1,4 @@
+from fastapi import datastructures
 import os
 import pickle
 import numpy as np
@@ -100,11 +101,43 @@ async def predict(data: UserInput):
                 if resp.text: advice = resp.text.strip()
             except: pass
 
+        needs = max(15, min(50, ((data.total_expense - data.lifestyle_expense) / monthly_inc) * 100))
+        wants = max(5, min(40, (data.lifestyle_expense / monthly_inc) * 100))
+        savings = max(10, 100 - needs - wants)
+
+        total_alloc = needs + wants + savings
+        needs = round((needs / total_alloc) * 100)
+        wants = round((wants / total_alloc) * 100)
+        savings = 100 - needs - wants
+
+        if savings >= 40:
+            budget_status = "Sangat Sehat"
+        elif savings >= 19:
+            budget_status = "Sehat"
+        else:
+            budget_status = "Perlu Perhatian"
+
+        alloc_map = {
+        "Kebutuhan": needs,
+        "Keinginan": wants,
+        "Tabungan": savings
+        }
+
+        dominant_class = max(alloc_map, key=alloc_map.get)
         return {
-            "predicted_saving_ratio": float(round(ratio, 4)),
-            "recommendation": recommendation,
-            "asset_allocation": {"reksadana": 30, "obligasi": 40, "saham": 30}, # Contoh alokasi
-            "ai_advice": advice
+        "predicted_saving_ratio": float(round(ratio, 4)),
+        "recommendation": recommendation,
+        "needs": needs,
+        "wants": wants,
+        "savings": savings,
+        "budget_status": budget_status,
+        "dominant_class": dominant_class,
+        "asset_allocation": {
+            "reksadana": 30,
+            "obligasi": 40,
+            "saham": 30
+        },
+        "ai_advice": advice
         }
     except Exception as e:
         return {"error": str(e)}, 500
